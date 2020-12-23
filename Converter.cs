@@ -54,7 +54,7 @@ namespace DbDiagramIoToCSharp {
       }
       var alias = "";
       if (cleanedUpString.Contains(" as ")) {
-        alias = cleanedUpString.Substring(cleanedUpString.IndexOf(" as ")).Trim();
+        alias = cleanedUpString.Substring(cleanedUpString.IndexOf(" as ") + " as ".Length).Trim();
         cleanedUpString = cleanedUpString.Substring(0, cleanedUpString.IndexOf(" as "));
       }
 
@@ -142,12 +142,13 @@ namespace DbDiagramIoToCSharp {
       var destinationTable = destinationTableField.Split(".") [0].Replace("\"", "").Trim();
       var sourceTable = sourceTableField.Split(".") [0].Replace("\"", "").Trim();
       var sourceField = sourceTableField.Split(".") [1].Replace("\"", "").Trim();
-      var c = cls.First(x => x.Name == destinationTable || x.Alias == destinationTable);
-      var p = c.Properties.First(x => x.Name == sourceField);
-      int index = c.Properties.IndexOf(p);
-      c.Properties.Insert(index + 1, new Property {
-        Name = sourceTable.Trim(),
-          Type = sourceTable.Trim()
+      var sourceClass = cls.First(x => x.Name == sourceTable || x.Alias == sourceTable);
+      var destinationClass = cls.First(x => x.Name == destinationTable || x.Alias == destinationTable);
+      var destinationProperty = destinationClass.Properties.First(x => x.Name == sourceField);
+      int index = destinationClass.Properties.IndexOf(destinationProperty);
+      destinationClass.Properties.Insert(index + 1, new Property {
+        Name = sourceClass.Name.Trim(),
+          Type = sourceClass.Name.Trim()
       });
 
     }
