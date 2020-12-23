@@ -1,0 +1,32 @@
+Table Category as Ctg {
+  CategoryId int [pk, increment] // auto-increment
+  // this line should be skipped
+  Name varchar
+  CreatedDateTime datetime
+  CreatedBy varchar // username
+  LastUpdatedDateTime datetime
+  LastUpdatedBy varchar // username
+  IsActive bit
+}
+
+
+Table FAQ {
+  FAQId int [pk, increment]
+  CategoryId int
+  Question varchar
+  Answer varchar
+  CreatedDateTime datetime
+  CreatedBy varchar // username
+  LastUpdatedDateTime datetime
+  LastUpdatedBy varchar // username
+  RankClickCount bigint // count used for ranking - can get updated by ranking
+  HistoricalClickCount bigint // count of click
+  IsActive bit
+
+//  Indexes {
+//    (CategoryId) [name:'IX_CategoryId']
+//  }
+}
+
+
+Ref: "FAQ"."CategoryId" < "Category"."CategoryId"

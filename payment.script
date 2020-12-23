@@ -1,0 +1,104 @@
+table Cart as C {
+  CartId bigint
+  SessionId varchar
+  Version timestamp // entity framework
+  CreateDateTime datetime
+  CartStatusId int
+}
+
+table CartStatus as CS{
+  CartStatusId int
+  Name varchar
+  Description varchar
+}
+
+
+Ref: "Cart"."CartStatusId" < "CartStatus"."CartStatusId"
+
+table CartItem as CI {
+  CartItemId bigint
+  CartId bigint
+  Quantity int
+  Amount decimal
+  // ProductTypeId int
+  ProductId int
+}
+
+Ref: "CartItem"."CartId" < "Cart"."CartId"
+
+table ProductType as PT {
+  ProductTypeId int
+  Name varchar // Subscription, Parcel, Redemption, etc
+  Description varchar
+}
+// Ref: "CartItem"."ProductTypeId" < "ProductType"."ProductTypeId"
+
+table Product as P {
+  ProductId int
+  ProductTypeId int
+  Name varchar
+  Description varchar
+  Price decimal // 0 for variable price items, such as parcels
+  IsActive bit
+}
+
+table CartItemParcel as PP {
+  CartItemId bigint
+  ParcelNumber varchar
+  TaxYear int
+  HalfCode varchar
+  CPNumber varchar
+  BaseAmount decimal
+  Interest decimal
+  Fees decimal
+  TotalAmount decimal
+  IsLitigation bit
+}
+
+table CartItemSubscription {
+  CartItemId bigint
+  Name varchar
+  SubscriptionReportId int // look up name
+}
+
+table CartItemDownload {
+  CartItemId bigint
+}
+
+table Payment {
+	PaymentId bigint
+	CartId bigint
+	// PaymentProvider varchar // do we care?
+	ReferenceNumber varchar
+	FirstName varchar
+	MiddleName varchar
+	LastName varchar
+	Suffix varchar
+	Address1 varchar
+	Address2 varchar
+	City varchar
+	State varchar
+	ZipCode varchar
+	Country varchar
+	Telephone varchar
+	Email varchar
+	PaymentMethodId varchar // echeck / credit card / debit card
+	LastDigitsPaymentMethod varchar
+	PaymentMethodExpirationDate varchar
+	PaymentDate datetime
+	PaymentAmount decimal
+	Version timestamp
+}
+
+table "When do send payment information to TIS?"{
+  when datetime
+  ViaPaymentFile varchar
+}
+
+Ref: "Product"."ProductId" < "CartItem"."ProductId"
+
+Ref: "CartItemParcel"."CartItemId" < "CartItem"."CartItemId"
+
+Ref: "CartItemSubscription"."CartItemId" < "CartItem"."CartItemId"
+
+Ref: "CartItemDownload"."CartItemId" < "CartItem"."CartItemId"
